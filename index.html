@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="is">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Grunnstærðfræði</title>
+  <meta name="theme-color" content="#2563eb" />
+  <link rel="manifest" href="manifest.json" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div id="app">
+    <header class="topbar">
+      <h1>Grunnstærðfræði</h1>
+      <button id="installBtn" class="secondary small hidden">Setja upp app</button>
+    </header>
+
+    <main id="screen-home" class="screen active">
+      <section class="card home-grid">
+        <div class="panel">
+          <h2>Nemandi</h2>
+          <label>Velja nemanda</label>
+          <div class="row">
+            <select id="studentSelect"></select>
+            <button id="deleteStudentBtn" class="danger">Eyða</button>
+          </div>
+          <label>Nýr nemandi</label>
+          <div class="row">
+            <input id="newStudentInput" type="text" placeholder="Sláðu inn nafn" />
+            <button id="addStudentBtn">Bæta við</button>
+          </div>
+
+          <label>Æfing</label>
+          <select id="exerciseSelect"></select>
+
+          <label>Erfiðleiki</label>
+          <select id="difficultySelect">
+            <option value="easy">Auðvelt</option>
+            <option value="medium">Miðlungs</option>
+            <option value="hard">Erfitt</option>
+          </select>
+
+          <label>Fjöldi dæma</label>
+          <select id="questionCountSelect">
+            <option>5</option>
+            <option selected>10</option>
+            <option>15</option>
+            <option>20</option>
+          </select>
+
+          <div class="actions">
+            <button id="startBtn" class="primary big">Byrja</button>
+            <button id="teacherBtn" class="secondary">Kennari</button>
+          </div>
+          <p class="muted">Smelltu á rétt svar. Ef svarið er rangt stendur „Rangt, reyndu aftur.“</p>
+        </div>
+
+        <div class="panel">
+          <h2>Æfingar</h2>
+          <ul class="feature-list">
+            <li>Talning</li>
+            <li>Finna réttan fjölda</li>
+            <li>Hvaða tala kemur næst?</li>
+            <li>Hvaða tala var á undan?</li>
+            <li>Hvor tala er stærri?</li>
+            <li>Jafnmargir?</li>
+            <li>Mynstur</li>
+          </ul>
+          <div id="homeSummary" class="summary-box"></div>
+        </div>
+      </section>
+    </main>
+
+    <main id="screen-game" class="screen">
+      <section class="card">
+        <div class="game-top">
+          <div>
+            <h2 id="gameStudent"></h2>
+            <p id="gameMeta" class="muted"></p>
+          </div>
+          <div class="stats-inline">
+            <span id="progressText">1 / 10</span>
+            <span id="scoreText">Rétt: 0 | Rangt: 0</span>
+            <button id="quitBtn" class="secondary small">Hætta</button>
+          </div>
+        </div>
+
+        <div id="questionArea" class="question-area"></div>
+        <div id="feedback" class="feedback"></div>
+        <div id="answers" class="answers-grid"></div>
+      </section>
+    </main>
+
+    <main id="screen-results" class="screen">
+      <section class="card results-card">
+        <h2>Niðurstöður</h2>
+        <div id="resultsBox" class="results-box"></div>
+        <div class="actions">
+          <button id="playAgainBtn" class="primary">Ný lota</button>
+          <button id="homeBtn" class="secondary">Aðalskjár</button>
+        </div>
+      </section>
+    </main>
+
+    <div id="teacherModal" class="modal hidden">
+      <div class="modal-card login-card">
+        <h2>Kennarasvæði</h2>
+        <p>Sláðu inn lykilorð.</p>
+        <input id="teacherPasswordInput" type="password" placeholder="Lykilorð" />
+        <div id="teacherLoginMsg" class="feedback"></div>
+        <div class="actions">
+          <button id="teacherLoginBtn" class="primary">Opna</button>
+          <button id="teacherCancelBtn" class="secondary">Loka</button>
+        </div>
+      </div>
+    </div>
+
+    <main id="screen-teacher" class="screen">
+      <section class="card">
+        <div class="teacher-top">
+          <h2>Kennarasvæði</h2>
+          <div class="actions">
+            <button id="exportExcelBtn" class="secondary">Sækja Excel (.xls)</button>
+            <button id="exportPdfBtn" class="secondary">Sækja PDF</button>
+            <button id="teacherHomeBtn" class="primary">Aðalskjár</button>
+          </div>
+        </div>
+
+        <div class="teacher-grid">
+          <div class="panel">
+            <h3>Yfirlit</h3>
+            <div id="teacherSummary" class="summary-box"></div>
+          </div>
+          <div class="panel">
+            <h3>Myndræn framvinda</h3>
+            <canvas id="progressChart" width="640" height="260"></canvas>
+          </div>
+        </div>
+
+        <div class="teacher-grid">
+          <div class="panel">
+            <h3>Nemendur</h3>
+            <label>Velja nemanda</label>
+            <select id="teacherStudentSelect"></select>
+            <div id="studentStats" class="summary-box"></div>
+          </div>
+          <div class="panel">
+            <h3>Markmið</h3>
+            <label>Rétt á mínútu</label>
+            <input id="goalCpmInput" type="number" min="0" step="0.1" />
+            <label>Nákvæmni %</label>
+            <input id="goalAccInput" type="number" min="0" max="100" step="1" />
+            <div class="actions">
+              <button id="saveGoalsBtn" class="primary">Vista markmið</button>
+            </div>
+            <div id="goalMsg" class="feedback"></div>
+          </div>
+        </div>
+
+        <div class="panel">
+          <h3>Lotur</h3>
+          <div class="table-wrap">
+            <table id="sessionsTable">
+              <thead>
+                <tr>
+                  <th>Dagsetning</th>
+                  <th>Nemandi</th>
+                  <th>Æfing</th>
+                  <th>Erfiðleiki</th>
+                  <th>Dæmi</th>
+                  <th>Rétt</th>
+                  <th>Rangt</th>
+                  <th>Nákvæmni</th>
+                  <th>Rétt/mín</th>
+                </tr>
+              </thead>
+              <tbody></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+  <script src="app.js"></script>
+</body>
+</html>
