@@ -1,5 +1,5 @@
-const CACHE_NAME='grunnstaerdfraedi-unified-v4-20261124b';
-const ASSETS=['./','./index.html','./app.js?v=4.1','./styles.css?v=4.1','./manifest.json','./icon.svg','./icon-192.png','./icon-512.png'];
+const CACHE_NAME='grunnstaerdfraedi-unified-v4-20261124c';
+const ASSETS=['./','./index.html','./app.js?v=4.2','./styles.css?v=4.2','./manifest.json','./icon.svg','./icon-192.png','./icon-512.png'];
 self.addEventListener('install',event=>{event.waitUntil(caches.open(CACHE_NAME).then(cache=>cache.addAll(ASSETS)));self.skipWaiting();});
 self.addEventListener('activate',event=>{event.waitUntil((async()=>{
  const keys=await caches.keys();

@@ -91,7 +91,7 @@ function exerciseArt(type){
 }
 function objectsHtml(n,type='apple',small=false){
  if(n===0)return '<div class="zero-group" role="img" aria-label="Engir hlutir">∅</div>';
- return `<div data-quantity="${n}" class="object-group ${small && n>10?'small-group':''}" role="img" aria-label="${n} ${type==='apple'?'epli':'hlutir'}">${Array.from({length:n},()=>`<span class="object">${shapeIcon(type)}</span>`).join('')}</div>`;
+ return `<div data-quantity="${n}" style="--columns:${Math.min(n,5)};--compare-columns:${Math.min(n,3)}" class="object-group ${small && n>10?'small-group':''}" role="img" aria-label="${n} ${type==='apple'?'epli':'hlutir'}">${Array.from({length:n},()=>`<span class="object">${shapeIcon(type)}</span>`).join('')}</div>`;
 }
 function sequenceHtml(values){return `<div class="number-sequence">${values.map((v,i)=>`${i?'<span class="number-arrow" aria-hidden="true">→</span>':''}<span class="number-block ${v==='?'?'missing':''}">${v}</span>`).join('')}</div>`;}
 function patternHtml(values){return `<div class="shape-pattern" role="img" aria-label="${escapeHtml(values.map(v=>SHAPE_NAMES[v]||v).join(', '))}">${values.map(v=>v==='?'?'<span class="number-block missing" aria-hidden="true">?</span>':shapeIcon(v)).join('')}</div>`;}
@@ -193,6 +193,7 @@ function startGame(){
  const exercise=ui.exerciseSelect.value,difficulty=ui.difficultySelect.value,questionCount=+ui.questionCountSelect.value;
  const questions=generateQuestionSet(exercise,difficulty,questionCount),student=ui.studentSelect.value;
  gameState={student,exercise,difficulty,questionCount:questions.length,questions,index:0,correct:0,wrong:0,firstTry:0,streak:0,bestStreak:0,startedAt:Date.now(),active:true,locked:false,attempted:false};
+ ui.scoreText.textContent='Kláruð: 0 | Reynt aftur: 0';
  ui.gameStudent.textContent=student||'Æfum saman';ui.gameMeta.textContent=`${EXERCISES[exercise]} · ${DIFFICULTIES[difficulty].label}`;
  showScreen('game');renderQuestion();
 }
@@ -230,7 +231,7 @@ function submitAnswer(selected,button){
   ui.feedback.textContent='↻ Reyndu aftur. Skoðaðu myndina vel.';ui.feedback.className='feedback bad';
   const next=Array.from(ui.answers.querySelectorAll('button')).find(b=>!b.disabled);next?.focus({preventScroll:true});
  }
- ui.scoreText.textContent=`Kláruð: ${s.correct} | Tilraunir aftur: ${s.wrong}`;
+ ui.scoreText.textContent=`Kláruð: ${s.correct} | Reynt aftur: ${s.wrong}`;
 }
 function nextQuestion(){
  const s=gameState;if(!s?.active||!s.locked)return;clearTimeout(nextTimer);s.locked=false;s.index++;
