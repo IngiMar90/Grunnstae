@@ -91,7 +91,7 @@ function exerciseArt(type){
 }
 function objectsHtml(n,type='apple',small=false){
  if(n===0)return '<div class="zero-group" role="img" aria-label="Engir hlutir">∅</div>';
- return `<div class="object-group ${small?'small-group':''}" role="img" aria-label="${n} ${type==='apple'?'epli':'hlutir'}">${Array.from({length:n},()=>`<span class="object">${shapeIcon(type)}</span>`).join('')}</div>`;
+ return `<div data-quantity="${n}" class="object-group ${small && n>10?'small-group':''}" role="img" aria-label="${n} ${type==='apple'?'epli':'hlutir'}">${Array.from({length:n},()=>`<span class="object">${shapeIcon(type)}</span>`).join('')}</div>`;
 }
 function sequenceHtml(values){return `<div class="number-sequence">${values.map((v,i)=>`${i?'<span class="number-arrow" aria-hidden="true">→</span>':''}<span class="number-block ${v==='?'?'missing':''}">${v}</span>`).join('')}</div>`;}
 function patternHtml(values){return `<div class="shape-pattern" role="img" aria-label="${escapeHtml(values.map(v=>SHAPE_NAMES[v]||v).join(', '))}">${values.map(v=>v==='?'?'<span class="number-block missing" aria-hidden="true">?</span>':shapeIcon(v)).join('')}</div>`;}
