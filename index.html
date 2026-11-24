@@ -1,112 +1,69 @@
 <!DOCTYPE html>
 <html lang="is">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Grunnstærðfræði</title>
-  <meta name="theme-color" content="#2563eb" />
-  <link rel="manifest" href="manifest.json" />
-  <link rel="stylesheet" href="styles.css" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#4442a6">
+  <meta name="description" content="Myndræn stærðfræði í litlum skrefum. Teldu, paraðu, berðu saman og finndu mynstur.">
+  <title>Grunnstærðfræði · Lærum með myndum</title>
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" href="icon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="styles.css?v=4.0">
+  <script src="app.js?v=4.0" defer></script>
 </head>
 <body>
+  <a href="#screen-home" class="skip-link">Fara í efni</a>
   <div id="app">
     <header class="topbar">
-      <h1>Grunnstærðfræði</h1>
-      <button id="installBtn" class="secondary small hidden">Setja upp app</button>
+      <a class="brand" href="./" aria-label="Grunnstærðfræði, aðalsíða"><img src="icon.svg" alt="" width="42" height="42"><span>Grunnstærðfræði<small>Lærum með myndum</small></span></a>
+      <div class="top-actions"><button id="installBtn" class="secondary small hidden">Setja upp app</button><button id="teacherBtn" class="secondary small">Kennarasvæði <span aria-hidden="true">↗</span></button></div>
     </header>
-
-    <main id="screen-home" class="screen active">
-      <section class="card home-grid">
-        <div class="panel">
-          <h2>Nemandi</h2>
-          <label>Velja nemanda</label>
-          <div class="row">
-            <select id="studentSelect"></select>
-            <button id="deleteStudentBtn" class="danger">Eyða</button>
+    <main id="screen-home" class="screen active" tabindex="-1">
+      <div class="home-grid">
+        <aside class="settings card" aria-label="Stillingar æfingar">
+          <div class="section-kicker">Í ÞÍNUM TAKTI</div>
+          <h2>Veljum saman</h2>
+          <label for="studentSelect">Hver ætlar að æfa?</label>
+          <select id="studentSelect"></select>
+          <details class="student-details"><summary>Bæta við nemanda</summary><label for="newStudentInput">Nafn eða gælunafn</label><div class="row"><input id="newStudentInput" type="text" placeholder="Skrifaðu nafn" maxlength="60" autocomplete="off"><button id="addStudentBtn" class="secondary" aria-label="Bæta við nemanda">+</button></div></details>
+          <label id="difficultyLabel">Erfiðleikastig</label>
+          <div id="difficultyButtons" class="level-group" role="group" aria-labelledby="difficultyLabel">
+            <button data-level="easy" aria-pressed="true"><span>1</span>Auðvelt<small>1–5</small></button>
+            <button data-level="medium" aria-pressed="false"><span>2</span>Miðlungs<small>1–10</small></button>
+            <button data-level="hard" aria-pressed="false"><span>3</span>Erfitt<small>10–30</small></button>
           </div>
-          <label>Nýr nemandi</label>
-          <div class="row">
-            <input id="newStudentInput" type="text" placeholder="Sláðu inn nafn" />
-            <button id="addStudentBtn">Bæta við</button>
-          </div>
-
-          <label>Æfing</label>
-          <select id="exerciseSelect"></select>
-
-          <label>Erfiðleiki</label>
-          <select id="difficultySelect">
-            <option value="easy">Auðvelt</option>
-            <option value="medium">Miðlungs</option>
-            <option value="hard">Erfitt</option>
-          </select>
-
-          <label>Fjöldi dæma</label>
-          <select id="questionCountSelect">
-            <option>5</option>
-            <option selected>10</option>
-            <option>15</option>
-            <option>20</option>
-          </select>
-
-          <div class="actions">
-            <button id="startBtn" class="primary big">Byrja</button>
-            <button id="teacherBtn" class="secondary">Kennari</button>
-          </div>
-          <p class="muted">Smelltu á rétt svar. Ef svarið er rangt stendur „Rangt, reyndu aftur.“</p>
-        </div>
-
-        <div class="panel">
-          <h2>Æfingar</h2>
-          <ul class="feature-list">
-            <li>Talning</li>
-            <li>Finna réttan fjölda</li>
-            <li>Hvaða tala kemur næst?</li>
-            <li>Hvaða tala var á undan?</li>
-            <li>Hvor tala er stærri?</li>
-            <li>Jafnmargir?</li>
-            <li>Mynstur</li>
-          </ul>
-          <div id="homeSummary" class="summary-box"></div>
-        </div>
+          <select id="difficultySelect" class="hidden" aria-label="Erfiðleiki"><option value="easy">Auðvelt</option><option value="medium">Miðlungs</option><option value="hard">Erfitt</option></select>
+          <label for="questionCountSelect">Fjöldi dæma</label>
+          <select id="questionCountSelect"><option>5</option><option selected>10</option><option>15</option><option>20</option></select>
+          <label class="check-label"><input id="autoAdvance" type="checkbox">Fara sjálfkrafa áfram</label>
+          <div class="ready-box"><span class="muted">Valin æfing</span><strong id="selectedExerciseLabel">Talning</strong><button id="startBtn" class="primary big">Byrja að æfa <span aria-hidden="true">→</span></button></div>
+          <p class="quiet-note">Eitt dæmi í einu. Þú mátt alltaf reyna aftur.</p>
+          <div id="homeSummary" class="home-summary"></div>
+        </aside>
+        <section class="exercise-section" aria-labelledby="exerciseHeading">
+          <div class="intro"><div class="section-kicker">SJÁÐU · TELDU · VELDU</div><h1 id="exerciseHeading">Hvað viltu æfa í dag?</h1><p>Veldu mynd og ýttu á <strong>Byrja að æfa</strong>.</p></div>
+          <select id="exerciseSelect" class="hidden" aria-label="Valin æfing"></select>
+          <div id="exerciseCards" class="exercise-grid" role="group" aria-label="Veldu æfingu"></div>
+          <div class="learning-note"><span class="note-icon" aria-hidden="true">✦</span><p>Litlum skrefum fylgja stórar framfarir.<br><span>Engin tímamörk. Gott pláss til að hugsa.</span></p></div>
+        </section>
+      </div>
+    </main>
+    <main id="screen-game" class="screen" tabindex="-1">
+      <section class="card game-card">
+        <div class="game-top"><button id="quitBtn" class="secondary small">← Aðalsíða</button><div class="game-heading"><h2 id="gameStudent"></h2><p id="gameMeta" class="muted"></p></div><span id="progressText" class="progress-label">1 / 10</span></div>
+        <div class="progress-track" role="progressbar" aria-label="Framvinda lotu" aria-valuemin="0" aria-valuemax="10" aria-valuenow="0"><div id="progressFill"></div></div>
+        <div id="questionArea" class="question-area" tabindex="-1"></div>
+        <div id="answers" class="answers-grid" role="group" aria-label="Veldu svar"></div>
+        <div class="question-footer"><div id="feedback" class="feedback" role="status" aria-live="polite"></div><button id="nextBtn" class="primary hidden">Næsta dæmi →</button></div>
+        <span id="scoreText" class="sr-only">Rétt: 0 | Tilraunir aftur: 0</span>
       </section>
     </main>
-
-    <main id="screen-game" class="screen">
-      <section class="card">
-        <div class="game-top">
-          <div>
-            <h2 id="gameStudent"></h2>
-            <p id="gameMeta" class="muted"></p>
-          </div>
-          <div class="stats-inline">
-            <span id="progressText">1 / 10</span>
-            <span id="scoreText">Rétt: 0 | Rangt: 0</span>
-            <button id="quitBtn" class="secondary small">Hætta</button>
-          </div>
-        </div>
-
-        <div id="questionArea" class="question-area"></div>
-        <div id="feedback" class="feedback"></div>
-        <div id="answers" class="answers-grid"></div>
-      </section>
-    </main>
-
-    <main id="screen-results" class="screen">
-      <section class="card results-card">
-        <h2>Niðurstöður</h2>
-        <div id="resultsBox" class="results-box"></div>
-        <div class="actions">
-          <button id="playAgainBtn" class="primary">Ný lota</button>
-          <button id="homeBtn" class="secondary">Aðalskjár</button>
-        </div>
-      </section>
-    </main>
-
-    <div id="teacherModal" class="modal hidden">
+    <main id="screen-results" class="screen" tabindex="-1"><section class="card results-card"><div class="result-star" aria-hidden="true">✦</div><div class="section-kicker">VEL GERT!</div><h1>Þú kláraðir lotuna.</h1><p>Taktu eftir öllu sem þú ert að æfa.</p><div id="resultsBox" class="results-box"></div><div class="actions"><button id="playAgainBtn" class="primary">Æfa aftur →</button><button id="homeBtn" class="secondary">Velja aðra æfingu</button></div></section></main>
+    <div id="teacherModal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="teacherTitle">
       <div class="modal-card login-card">
-        <h2>Kennarasvæði</h2>
+        <h2 id="teacherTitle">Kennarasvæði</h2>
         <p>Sláðu inn lykilorð.</p>
-        <input id="teacherPasswordInput" type="password" placeholder="Lykilorð" />
+        <label for="teacherPasswordInput" class="sr-only">Lykilorð</label><input id="teacherPasswordInput" type="password" placeholder="Lykilorð" />
         <div id="teacherLoginMsg" class="feedback"></div>
         <div class="actions">
           <button id="teacherLoginBtn" class="primary">Opna</button>
@@ -121,7 +78,7 @@
           <h2>Kennarasvæði</h2>
           <div class="actions">
             <button id="exportExcelBtn" class="secondary">Sækja Excel (.xls)</button>
-            <button id="exportPdfBtn" class="secondary">Sækja PDF</button>
+            <button id="exportPdfBtn" class="secondary">Prenta / vista PDF</button>
             <button id="teacherHomeBtn" class="primary">Aðalskjár</button>
           </div>
         </div>
@@ -140,15 +97,15 @@
         <div class="teacher-grid">
           <div class="panel">
             <h3>Nemendur</h3>
-            <label>Velja nemanda</label>
-            <select id="teacherStudentSelect"></select>
+            <label for="teacherStudentSelect">Velja nemanda</label>
+            <select id="teacherStudentSelect"></select><button id="deleteStudentBtn" class="danger small">Eyða völdum nemanda</button>
             <div id="studentStats" class="summary-box"></div>
           </div>
           <div class="panel">
             <h3>Markmið</h3>
-            <label>Rétt á mínútu</label>
+            <label for="goalCpmInput">Rétt á mínútu</label>
             <input id="goalCpmInput" type="number" min="0" step="0.1" />
-            <label>Nákvæmni %</label>
+            <label for="goalAccInput">Nákvæmni %</label>
             <input id="goalAccInput" type="number" min="0" max="100" step="1" />
             <div class="actions">
               <button id="saveGoalsBtn" class="primary">Vista markmið</button>
@@ -180,7 +137,8 @@
         </div>
       </section>
     </main>
+
   </div>
-  <script src="app.js"></script>
+  <noscript>Þú þarft að virkja JavaScript til að nota æfingarnar.</noscript>
 </body>
 </html>
