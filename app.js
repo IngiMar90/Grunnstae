@@ -13,20 +13,21 @@ const DIFFICULTIES = {
 };
 const MODE_MAP = {'Telja hluti':'counting','Talning':'counting','Finna réttan fjölda':'findCount','Hvað kemur næst?':'nextNumber','Hvað kemur á undan?':'previousNumber','Hvað er stærra?':'biggerNumber','Jafnmargir?':'sameAmount','Mynstur':'pattern'};
 const META = {
-  counting:{hint:'Teldu myndirnar.',color:'#fcf0d8',art:'count'},
-  findCount:{hint:'Paraðu tölu og mynd.',color:'#e9e5fa',art:'match'},
-  nextNumber:{hint:'Eitt skref áfram.',color:'#e4f1ed',art:'next'},
-  previousNumber:{hint:'Eitt skref til baka.',color:'#e9eefc',art:'previous'},
-  biggerNumber:{hint:'Berðu saman tvær tölur.',color:'#fae8e4',art:'bigger'},
-  sameAmount:{hint:'Eru jafnmargir í hópunum?',color:'#e6f0f4',art:'equal'},
-  pattern:{hint:'Finndu það sem kemur næst.',color:'#f5e8f3',art:'pattern'},
-  mixed:{hint:'Prófaðu svolítið af öllu.',color:'#eeedf6',art:'mixed'}
+  counting:{title:'Telja',hint:'Teldu myndirnar.',color:'#fcf0d8',art:'count'},
+  findCount:{title:'Finna fjölda',hint:'Paraðu tölu og mynd.',color:'#e9e5fa',art:'match'},
+  nextNumber:{title:'Næsta tala',hint:'Eitt skref áfram.',color:'#e4f1ed',art:'next'},
+  previousNumber:{title:'Talan á undan',hint:'Eitt skref til baka.',color:'#e9eefc',art:'previous'},
+  biggerNumber:{title:'Stærri talan',hint:'Berðu saman tvær tölur.',color:'#fae8e4',art:'bigger'},
+  sameAmount:{title:'Jafnmargir?',hint:'Eru jafnmargir í hópunum?',color:'#e6f0f4',art:'equal'},
+  pattern:{title:'Mynstur',hint:'Finndu það sem kemur næst.',color:'#f5e8f3',art:'pattern'},
+  mixed:{title:'Blandað',hint:'Prófaðu svolítið af öllu.',color:'#eeedf6',art:'mixed'}
 };
 const ui = {};
 let deferredPrompt = null, nextTimer = null;
 let store = loadStore();
 let gameState = null;
 const prefs = readJson('grunnstaerdfraedi_preferences') || {};
+let selectedExercise = EXERCISES[prefs.exercise] ? prefs.exercise : 'counting';
 
 function readJson(key){try{return JSON.parse(localStorage.getItem(key));}catch{return null;}}
 function escapeHtml(s){return String(s).replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));}
@@ -62,7 +63,7 @@ function loadStore(){
   try{localStorage.setItem(STORAGE_KEY,JSON.stringify(data));}catch{}
   return data;
 }
-function rememberPrefs(){try{localStorage.setItem('grunnstaerdfraedi_preferences',JSON.stringify({exercise:ui.exerciseSelect.value,difficulty:ui.difficultySelect.value,count:+ui.questionCountSelect.value,autoAdvance:ui.autoAdvance.checked}));}catch{}}
+function rememberPrefs(){try{localStorage.setItem('grunnstaerdfraedi_preferences',JSON.stringify({exercise:selectedExercise,difficulty:ui.difficultySelect.value,count:+ui.questionCountSelect.value,autoAdvance:ui.autoAdvance.checked}));}catch{}}
 
 // Small vector illustrations remain crisp on classroom screens and work offline.
 function svg(content,view='0 0 220 116',label=''){return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="${view}" ${label?`role="img" aria-label="${escapeHtml(label)}"`:'aria-hidden="true"'}>${content}</svg>`;}
@@ -98,19 +99,16 @@ function patternHtml(values){return `<div class="shape-pattern" role="img" aria-
 const SHAPE_NAMES={circle:'hringur',triangle:'þríhyrningur',square:'ferningur',star:'stjarna',apple:'epli'};
 
 function renderCards(){
- ui.exerciseCards.innerHTML=Object.entries(EXERCISES).map(([key,label])=>`<button class="exercise-card" data-exercise="${key}" aria-pressed="${ui.exerciseSelect.value===key}" style="--tint:${META[key].color}"><span class="selection-check" aria-hidden="true">✓</span><span class="card-art">${exerciseArt(META[key].art)}</span><span class="card-title">${label}</span><span class="card-description">${META[key].hint}</span></button>`).join('');
- ui.exerciseCards.querySelectorAll('button').forEach(b=>b.addEventListener('click',()=>{
-  ui.exerciseSelect.value=b.dataset.exercise;syncSelection();rememberPrefs();
-  if(matchMedia('(max-width:640px)').matches)ui.startBtn.scrollIntoView({behavior:matchMedia('(prefers-reduced-motion:reduce)').matches?'instant':'smooth',block:'center'});
+ ui.exerciseCards.innerHTML=Object.entries(EXERCISES).map(([key,label])=>`<button class="exercise-card" data-exercise="${key}" aria-label="Byrja: ${label}" style="--tint:${META[key].color}"><span class="card-art">${exerciseArt(META[key].art)}</span><span class="card-title-row"><span class="card-title">${META[key].title}</span><span class="play-badge" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M9 5v14l11-7Z" fill="currentColor"/></svg></span></span></button>`).join('');
+ ui.exerciseCards.querySelectorAll('button').forEach(button=>button.addEventListener('click',()=>{
+  selectedExercise=button.dataset.exercise;
+  startGame();
  }));syncSelection();
 }
 function syncSelection(){
- ui.exerciseCards.querySelectorAll('button').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.exercise===ui.exerciseSelect.value)));
- byId('selectedExerciseLabel').textContent=EXERCISES[ui.exerciseSelect.value];
- byId('difficultyButtons').querySelectorAll('button').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.level===ui.difficultySelect.value)));
+ byId('difficultyButtons').querySelectorAll('button').forEach(button=>button.setAttribute('aria-pressed',String(button.dataset.level===ui.difficultySelect.value)));
 }
 function populateSelectors(){
- if(!ui.exerciseSelect.options.length)ui.exerciseSelect.innerHTML=Object.entries(EXERCISES).map(([key,label])=>`<option value="${key}">${label}</option>`).join('');
  const current=ui.studentSelect.value,last=readLastStudent();
  const teacherCurrent=ui.teacherStudentSelect.value;
  ui.studentSelect.innerHTML='<option value="">Æfa án nafns</option>';
@@ -190,7 +188,7 @@ function generateQuestion(exercise,difficulty){
 }
 function startGame(){
  clearTimeout(nextTimer);rememberPrefs();
- const exercise=ui.exerciseSelect.value,difficulty=ui.difficultySelect.value,questionCount=+ui.questionCountSelect.value;
+ const exercise=selectedExercise,difficulty=ui.difficultySelect.value,questionCount=+ui.questionCountSelect.value;
  const questions=generateQuestionSet(exercise,difficulty,questionCount),student=ui.studentSelect.value;
  gameState={student,exercise,difficulty,questionCount:questions.length,questions,index:0,correct:0,wrong:0,firstTry:0,streak:0,bestStreak:0,startedAt:Date.now(),active:true,locked:false,attempted:false};
  ui.scoreText.textContent='Kláruð: 0 | Reynt aftur: 0';
@@ -258,14 +256,14 @@ function showScreen(name){
 }
 
 function cacheUi(){
- ['installBtn','studentSelect','deleteStudentBtn','newStudentInput','addStudentBtn','exerciseSelect','difficultySelect','questionCountSelect','autoAdvance','exerciseCards','startBtn','teacherBtn','homeSummary','gameStudent','gameMeta','progressText','scoreText','questionArea','feedback','answers','quitBtn','nextBtn','resultsBox','playAgainBtn','homeBtn','teacherModal','teacherPasswordInput','teacherLoginBtn','teacherCancelBtn','teacherLoginMsg','teacherHomeBtn','exportExcelBtn','exportPdfBtn','teacherSummary','progressChart','teacherStudentSelect','studentStats','goalCpmInput','goalAccInput','saveGoalsBtn','goalMsg'].forEach(id=>ui[id]=byId(id));
+ ['installBtn','studentSelect','deleteStudentBtn','newStudentInput','addStudentBtn','difficultySelect','questionCountSelect','autoAdvance','exerciseCards','teacherBtn','homeSummary','gameStudent','gameMeta','progressText','scoreText','questionArea','feedback','answers','quitBtn','nextBtn','resultsBox','playAgainBtn','homeBtn','teacherModal','teacherPasswordInput','teacherLoginBtn','teacherCancelBtn','teacherLoginMsg','teacherHomeBtn','exportExcelBtn','exportPdfBtn','teacherSummary','progressChart','teacherStudentSelect','studentStats','goalCpmInput','goalAccInput','saveGoalsBtn','goalMsg'].forEach(id=>ui[id]=byId(id));
  ui.sessionsTableBody=document.querySelector('#sessionsTable tbody');
 }
 function closeTeacherModal(){ui.teacherModal.classList.add('hidden');ui.teacherBtn.focus();}
 function bindEvents(){
  ui.addStudentBtn.onclick=addStudent;ui.newStudentInput.onkeydown=e=>{if(e.key==='Enter')addStudent();};
  ui.studentSelect.onchange=()=>{try{localStorage.setItem(LAST_STUDENT_KEY,ui.studentSelect.value);}catch{}renderHomeSummary();};
- ui.deleteStudentBtn.onclick=deleteStudent;ui.startBtn.onclick=startGame;ui.quitBtn.onclick=confirmQuit;ui.nextBtn.onclick=nextQuestion;
+ ui.deleteStudentBtn.onclick=deleteStudent;ui.quitBtn.onclick=confirmQuit;ui.nextBtn.onclick=nextQuestion;
  ui.playAgainBtn.onclick=startGame;ui.homeBtn.onclick=()=>showScreen('home');ui.teacherHomeBtn.onclick=()=>showScreen('home');
  ui.teacherBtn.onclick=()=>{
   if(gameState?.active)return;
@@ -289,7 +287,7 @@ function bindEvents(){
 }
 document.addEventListener('DOMContentLoaded',()=>{
  cacheUi();bindEvents();populateSelectors();
- ui.exerciseSelect.value=EXERCISES[prefs.exercise]?prefs.exercise:'counting';
+ selectedExercise=EXERCISES[prefs.exercise]?prefs.exercise:'counting';
  ui.difficultySelect.value=['easy','medium','hard'].includes(prefs.difficulty)?prefs.difficulty:'easy';
  ui.questionCountSelect.value=[5,10,15,20].includes(prefs.count)?String(prefs.count):'10';ui.autoAdvance.checked=!!prefs.autoAdvance;
  renderCards();showScreen('home');registerSW();

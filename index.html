@@ -8,8 +8,8 @@
   <title>Grunnstærðfræði · Lærum með myndum</title>
   <link rel="manifest" href="manifest.json">
   <link rel="icon" href="icon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="styles.css?v=4.2">
-  <script src="app.js?v=4.2" defer></script>
+  <link rel="stylesheet" href="styles.css?v=4.3">
+  <script src="app.js?v=4.3" defer></script>
 </head>
 <body>
   <a href="#screen-home" class="skip-link">Fara í efni</a>
@@ -21,8 +21,8 @@
     <main id="screen-home" class="screen active" tabindex="-1">
       <div class="home-grid">
         <aside class="settings card" aria-label="Stillingar æfingar">
-          <div class="section-kicker">Í ÞÍNUM TAKTI</div>
-          <h2>Veljum saman</h2>
+          <div class="section-kicker">FYRIR KENNARA</div>
+          <h2>Stillingar</h2>
           <label for="studentSelect">Hver ætlar að æfa?</label>
           <select id="studentSelect"></select>
           <details class="student-details"><summary>Bæta við nemanda</summary><label for="newStudentInput">Nafn eða gælunafn</label><div class="row"><input id="newStudentInput" type="text" placeholder="Skrifaðu nafn" maxlength="60" autocomplete="off"><button id="addStudentBtn" class="secondary" aria-label="Bæta við nemanda">+</button></div></details>
@@ -36,14 +36,12 @@
           <label for="questionCountSelect">Fjöldi dæma</label>
           <select id="questionCountSelect"><option>5</option><option selected>10</option><option>15</option><option>20</option></select>
           <label class="check-label"><input id="autoAdvance" type="checkbox">Fara sjálfkrafa áfram</label>
-          <div class="ready-box"><span class="muted">Valin æfing</span><strong id="selectedExerciseLabel">Talning</strong><button id="startBtn" class="primary big">Byrja að æfa <span aria-hidden="true">→</span></button></div>
           <p class="quiet-note">Eitt dæmi í einu. Þú mátt alltaf reyna aftur.</p>
           <div id="homeSummary" class="home-summary"></div>
         </aside>
         <section class="exercise-section" aria-labelledby="exerciseHeading">
-          <div class="intro"><div class="section-kicker">SJÁÐU · TELDU · VELDU</div><h1 id="exerciseHeading">Hvað viltu æfa í dag?</h1><p>Veldu mynd og ýttu á <strong>Byrja að æfa</strong>.</p></div>
-          <select id="exerciseSelect" class="hidden" aria-label="Valin æfing"></select>
-          <div id="exerciseCards" class="exercise-grid" role="group" aria-label="Veldu æfingu"></div>
+          <div class="intro"><div class="section-kicker">SJÁÐU · TELDU · VELDU</div><h1 id="exerciseHeading">Veldu verkefni</h1><p>Smelltu á mynd til að byrja.</p></div>
+          <div id="exerciseCards" class="exercise-grid" role="group" aria-label="Veldu verkefni"></div>
           <div class="learning-note"><span class="note-icon" aria-hidden="true">✦</span><p>Litlum skrefum fylgja stórar framfarir.<br><span>Engin tímamörk. Gott pláss til að hugsa.</span></p></div>
         </section>
       </div>

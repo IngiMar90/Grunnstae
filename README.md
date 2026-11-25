@@ -4,6 +4,10 @@
 
 A small Icelandic mathematics PWA for visual, accessible classroom practice. This is the combined successor to `Grunnstae`, `Grunnstaerd`, and `Staegrunnur`.
 
+## Choosing an activity
+
+The homepage uses large illustrated cards with short labels. Clicking a card starts its activity immediately, using the selected student, difficulty, and session length. There is no exercise dropdown or separate start step.
+
 ## Practice
 
 - Counting objects and matching a numeral to an illustrated quantity.
