@@ -1,5 +1,5 @@
-const CACHE_NAME='grunnstaerdfraedi-unified-v5-cards-20261125';
-const ASSETS=['./','./index.html','./app.js?v=4.3','./styles.css?v=4.3','./manifest.json','./icon.svg','./icon-192.png','./icon-512.png'];
+const CACHE_NAME='grunnstaerdfraedi-unified-v6-equality-20261125';
+const ASSETS=['./','./index.html','./app.js?v=4.4','./styles.css?v=4.4','./manifest.json','./icon.svg','./icon-192.png','./icon-512.png'];
 self.addEventListener('install',event=>{event.waitUntil(caches.open(CACHE_NAME).then(cache=>cache.addAll(ASSETS)));self.skipWaiting();});
 self.addEventListener('activate',event=>{event.waitUntil((async()=>{
  const keys=await caches.keys();

@@ -171,7 +171,7 @@ function generateQuestion(exercise,difficulty){
  }
  if(exercise==='sameAmount'){
   const a=n,b=Math.random()<.5?a:optionsFor(a,cfg.min,cfg.max,2).find(v=>v!==a);
-  q={prompt:'Eru jafnmargir í hópunum?',sub:'Teldu og berðu saman.',visual:`<div class="comparison"><div class="group-box">${objectsHtml(a,'apple',true)}</div><div class="group-box">${objectsHtml(b,'star',true)}</div></div>`,options:['Já','Nei'],correct:a===b?'Já':'Nei'};
+  q={prompt:'Eru jafnmargir í hópunum?',sub:'Teldu og berðu saman.',visual:`<div class="comparison equality-comparison"><div class="group-box">${objectsHtml(a,'apple',true)}</div><span class="equality-sign" role="img" aria-label="jafnaðarmerki">=</span><div class="group-box">${objectsHtml(b,'star',true)}</div></div>`,options:['Já','Nei'],correct:a===b?'Já':'Nei'};
  }
  if(exercise==='pattern'){
   if(difficulty==='hard'){

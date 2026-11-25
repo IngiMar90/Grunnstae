@@ -25,3 +25,8 @@
 @media(max-width:1180px){.exercise-grid{gap:14px}.card-art{height:135px}.card-title{font-size:1rem}}
 @media(max-width:1000px){.exercise-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.card-art{height:145px}}
 @media(max-width:640px){.exercise-grid{gap:12px}.exercise-card{padding:10px}.card-art{height:110px}.card-title-row{gap:6px;padding:12px 0 2px}.card-title{font-size:1rem}.play-badge{width:25px;height:25px}.play-badge svg{width:16px;height:16px}}
+
+/* Keep the equality question visually centered between the two groups. */
+.equality-comparison{max-width:650px;gap:16px}
+.equality-sign{display:block;align-self:center;flex-shrink:0;font-size:3rem;line-height:1;font-weight:800;color:var(--purple)}
+@media(max-width:640px){.equality-comparison{gap:6px}.equality-sign{font-size:2rem}.equality-comparison .object-group{grid-template-columns:repeat(var(--compare-columns,3),26px);gap:4px}.equality-comparison .object-group .object{width:26px;height:26px}.equality-comparison .object-group.small-group{grid-template-columns:repeat(3,22px)}.equality-comparison .small-group .object{width:22px;height:22px}}
